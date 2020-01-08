@@ -1,6 +1,8 @@
 # libfaults configuration
 
 The configuration is loaded from either `$HOME/libfaults.conf` or `/tmp/libfaults.conf`.
+You can also specify the path to the configuration using the `LIBFAULTS_CONFIGURATION`
+environment variable.
 
 The configuration of `libfaults` is split into sections using the `[` and `]` characters.
 

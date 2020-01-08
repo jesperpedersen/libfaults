@@ -50,6 +50,7 @@ init()
 {
    char homedir[128];
    struct passwd *pw = getpwuid(getuid());
+   char* config = NULL;
 
    memset(&homedir, 0, sizeof(homedir));
    snprintf(&homedir[0], sizeof(homedir), "%s/libfaults.conf", pw->pw_dir);
@@ -65,7 +66,16 @@ init()
 
    libfaults_init_configuration();
 
-   if (libfaults_read_configuration(&homedir[0]))
+   config = getenv("LIBFAULTS_CONFIGURATION");
+   if (config != NULL)
+   {
+      if (libfaults_read_configuration(config))
+      {
+         fprintf(stderr, "libfaults configuration (%s) not found", config);
+         exit(1);
+      }
+   }
+   else if (libfaults_read_configuration(&homedir[0]))
    {
       if (libfaults_read_configuration("/tmp/libfaults.conf"))
       {
