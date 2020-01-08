@@ -34,6 +34,7 @@
 #define ZF_LOG_TAG "libfaults"
 #include <zf_log.h>
 
+#include <errno.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <dlfcn.h>
@@ -80,4 +81,21 @@ __attribute__((destructor))
 static void
 destroy()
 {
+}
+
+bool
+libfaults_call_enabled(struct call* call)
+{
+   return call->enable;
+}
+
+int
+libfaults_invoke_call(struct call* call)
+{
+   if (call->error_code > 0)
+   {
+      errno = call->error_code;
+   }
+
+   return call->return_value;
 }

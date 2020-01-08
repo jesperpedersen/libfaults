@@ -41,14 +41,9 @@
 int
 connect(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-   if (config.connect.enable)
+   if (libfaults_call_enabled(&config.connect))
    {
-      if (config.connect.error_code > 0)
-      {
-         errno = config.connect.error_code;
-      }
-
-      return config.connect.return_value;
+      return libfaults_invoke_call(&config.connect);
    }
 
    return real_connect(sockfd, addr, addrlen);

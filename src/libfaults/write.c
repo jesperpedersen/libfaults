@@ -41,14 +41,9 @@
 ssize_t
 write(int fd, void *buf, size_t count)
 {
-   if (config.write.enable)
+   if (libfaults_call_enabled(&config.write))
    {
-      if (config.write.error_code > 0)
-      {
-         errno = config.write.error_code;
-      }
-
-      return config.write.return_value;
+      return libfaults_invoke_call(&config.write);
    }
 
    return real_write(fd, buf, count);

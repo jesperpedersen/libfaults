@@ -79,6 +79,22 @@ struct configuration
 
 } __attribute__ ((aligned (64)));
 
+/**
+ * Is the call enabled
+ * @param call The call
+ * @return True if enabled, otherwise false
+ */
+bool
+libfaults_call_enabled(struct call* call);
+
+/**
+ * Invoke call
+ * @param call The call
+ * @return The return value
+ */
+int
+libfaults_invoke_call(struct call* call);
+
 #ifdef __cplusplus
 }
 #endif

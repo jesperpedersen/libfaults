@@ -41,14 +41,9 @@
 int
 socket(int domain, int type, int protocol)
 {
-   if (config.socket.enable)
+   if (libfaults_call_enabled(&config.socket))
    {
-      if (config.socket.error_code > 0)
-      {
-         errno = config.socket.error_code;
-      }
-
-      return config.socket.return_value;
+      return libfaults_invoke_call(&config.socket);
    }
 
    return real_socket(domain, type, protocol);

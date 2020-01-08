@@ -41,14 +41,9 @@
 int
 listen(int sockfd, int backlog)
 {
-   if (config.listen.enable)
+   if (libfaults_call_enabled(&config.listen))
    {
-      if (config.listen.error_code > 0)
-      {
-         errno = config.listen.error_code;
-      }
-
-      return config.listen.return_value;
+      return libfaults_invoke_call(&config.listen);
    }
 
    return real_listen(sockfd, backlog);

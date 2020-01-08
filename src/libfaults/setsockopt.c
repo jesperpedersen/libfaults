@@ -41,14 +41,9 @@
 int
 setsockopt(int sockfd, int level, int optname, const void *optval, socklen_t optlen)
 {
-   if (config.setsockopt.enable)
+   if (libfaults_call_enabled(&config.setsockopt))
    {
-      if (config.setsockopt.error_code > 0)
-      {
-         errno = config.setsockopt.error_code;
-      }
-
-      return config.setsockopt.return_value;
+      return libfaults_invoke_call(&config.setsockopt);
    }
 
    return real_setsockopt(sockfd, level, optname, optval, optlen);

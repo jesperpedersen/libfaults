@@ -41,14 +41,9 @@
 int
 accept(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
-   if (config.accept.enable)
+   if (libfaults_call_enabled(&config.accept))
    {
-      if (config.accept.error_code > 0)
-      {
-         errno = config.accept.error_code;
-      }
-
-      return config.accept.return_value;
+      return libfaults_invoke_call(&config.accept);
    }
 
    return real_accept(sockfd, addr, addrlen);

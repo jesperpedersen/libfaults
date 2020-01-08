@@ -41,14 +41,9 @@
 int
 bind(int sockfd, const struct sockaddr *addr, socklen_t addrlen)
 {
-   if (config.bind.enable)
+   if (libfaults_call_enabled(&config.bind))
    {
-      if (config.bind.error_code > 0)
-      {
-         errno = config.bind.error_code;
-      }
-
-      return config.bind.return_value;
+      return libfaults_invoke_call(&config.bind);
    }
 
    return real_bind(sockfd, addr, addrlen);
