@@ -56,6 +56,7 @@ struct call
    bool enable;        /**< Enable the call */
    int return_value;   /**< The return value */
    int error_code;     /**< The error */
+   int percentage;     /**< The percentage */
 
 } __attribute__ ((aligned (64)));
 

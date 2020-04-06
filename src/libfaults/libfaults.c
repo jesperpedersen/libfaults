@@ -40,9 +40,12 @@
 #include <dlfcn.h>
 #include <pwd.h>
 #include <string.h>
+#include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+
+static unsigned int seed = -1;
 
 __attribute__((constructor))
 static void
@@ -71,7 +74,7 @@ init()
    {
       if (libfaults_read_configuration(config))
       {
-         fprintf(stderr, "libfaults configuration (%s) not found", config);
+         fprintf(stderr, "libfaults configuration (%s) not found\n", config);
          exit(1);
       }
    }
@@ -79,7 +82,7 @@ init()
    {
       if (libfaults_read_configuration("/tmp/libfaults.conf"))
       {
-         fprintf(stderr, "libfaults configuration not found");
+         fprintf(stderr, "libfaults configuration not found\n");
          exit(1);
       }
    }
@@ -96,7 +99,30 @@ destroy()
 bool
 libfaults_call_enabled(struct call* call)
 {
-   return call->enable;
+   if (call->enable)
+   {
+      if (call->percentage != -1)
+      {
+         int value;
+
+         if (seed == -1)
+         {
+            seed = (unsigned int)time(NULL);
+            srand(seed);
+         }
+
+         value = rand_r(&seed) % 101;
+
+         if (call->percentage < value)
+         {
+            return false;
+         }
+      }
+
+      return true;
+   }
+
+   return false;
 }
 
 int

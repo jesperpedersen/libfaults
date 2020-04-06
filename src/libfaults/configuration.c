@@ -86,6 +86,7 @@ libfaults_read_configuration(char* filename)
     
    memset(&section, 0, LINE_LENGTH);
    memset(&call, 0, sizeof(struct call));
+   call.percentage = -1;
 
    while (fgets(line, sizeof(line), file))
    {
@@ -105,6 +106,7 @@ libfaults_read_configuration(char* filename)
                {
                   apply_call(section, &call);
                   memset(&call, 0, sizeof(struct call));
+                  call.percentage = -1;
                }
             }
          }
@@ -183,6 +185,25 @@ libfaults_read_configuration(char* filename)
                   if (strcmp(section, "libfaults"))
                   {
                      call.error_code = as_error_code(value);
+                  }
+                  else
+                  {
+                     unknown = true;
+                  }
+               }
+               else if (!strcmp(key, "percentage"))
+               {
+                  if (strcmp(section, "libfaults"))
+                  {
+                     call.percentage = as_int(value);
+                     if (call.percentage > 100)
+                     {
+                        call.percentage = 100;
+                     }
+                     else if (call.percentage < 0)
+                     {
+                        call.percentage = -1;
+                     }
                   }
                   else
                   {
